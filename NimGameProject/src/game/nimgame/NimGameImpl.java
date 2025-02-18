@@ -1,92 +1,39 @@
 package game.nimgame;
 
+import game.AbstractGame;
 import game.Game;
+import game.player.Player;
+import io.Writer;
 
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
-public class NimGameImpl implements Game {
-    private final Scanner scanner= new Scanner(System.in);
-    private int stones;
-    private int turn;
+public class NimGameImpl extends AbstractGame<Integer,Integer> {
 
-    public NimGameImpl() {
-        stones = 23;
+
+
+
+
+
+
+
+    public NimGameImpl(final Writer writer) {
+      super(writer);
+      setBoard(23);
 
     }
+
 
     @Override
-    public void play() {
-        while (!isGameover()) {
-            playRound();
-        }
+    protected boolean isTurnValid() {
+        return getTurn() >= 1 && getTurn() <= 3;
     }
-
-    private void playRound() {//Integration
-        playSingleTurn();
-        computerTurn();
-    }
-
-    private void playSingleTurn() {
-        if(isGameover()) return;
-
-        executeTurn();
-        terminateTurn("Mensch");
-
-    }
-
-    private void executeTurn() {
-        do {
-            humanTurn();
-        } while(isTurnNotValid());
-    }
-
-    private boolean isTurnNotValid() {
-        if(isTurnValid()) return false;
-        System.out.println("Ungueltiger Zug");
-        return true;
-    }
-
-
-    private void humanTurn() {
-        System.out.printf("Es gibt %s Steine. Bitte nehmen Sie 1,2 oder 3!\n",stones);
-        turn = scanner.nextInt();
-    }
-
-    private void computerTurn() {
-
-        if(isGameover()) return;
-
-        final int [] zuege = {3,1,1,2};
-
-
-
-        turn = zuege[stones %4];
-        System.out.printf("Computer nimmt %s Steine\n",turn);
-        terminateTurn("Computer");
-    }
-
-    private void terminateTurn( final String player) {// Integration
-        updateBoard();
-        printGameOverMessageIfGameIsOver(player);
-    }
-
-    private void printGameOverMessageIfGameIsOver(final String player) {
-        if(isGameover()){
-            System.out.printf("%s hat verloren\n", player);
-        }
-    }
-
-    //------------- implementierungssumpf -------------
-
-    private boolean isTurnValid() {
-        return turn >= 1 && turn <= 3;
-    }
-
-    private void updateBoard() {
-        stones-= turn;
+    @Override
+    protected void updateBoard() {
+        setBoard(getBoard() - getTurn());
     }  //Operation
-
-    private boolean isGameover() {//Operation
-        return stones < 1;
+    @Override
+    protected boolean isGameover() {//Operation
+        return getBoard() < 1 || getPlayers().isEmpty();
     };
 }
