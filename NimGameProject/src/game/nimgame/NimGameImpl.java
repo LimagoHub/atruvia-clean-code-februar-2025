@@ -23,6 +23,10 @@ public class NimGameImpl extends AbstractGame<Integer,Integer> {
 
     }
 
+    @Override
+    protected void prepare() {
+        write(getCurrentPlayer().getName() + " ist am Zug!");
+    }
 
     @Override
     protected boolean isTurnValid() {

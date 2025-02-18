@@ -10,7 +10,7 @@ public abstract class AbstractNimGamePlayer extends AbstractPlayer<Integer,Integ
         super();
     }
 
-    public AbstractNimGamePlayer(final String name) {
+    protected AbstractNimGamePlayer(final String name) {
         super(name);
     }
 

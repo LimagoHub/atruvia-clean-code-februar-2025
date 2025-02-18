@@ -59,24 +59,29 @@ public abstract class AbstractGame<BOARD, TURN> implements Game {
     }
     @Override
     public void play() {
-        while (!isGameover()) {
-            playRound();
-        }
+        while (!isGameover()) playRound();
+
     }
 
     private void playRound() {//Integration
-        for (var player : players) {
+        for (var player : getPlayers()) {
             setCurrentPlayer(player);
             playSingleTurn();
         }
 
     }
 
-    private void playSingleTurn() {
-        if(isGameover()) return;
+    private void playSingleTurn()
+    {
+        if(initTurn()) return;
         executeTurn();
         terminateTurn();
 
+    }
+
+    private boolean initTurn() {
+        prepare();
+        return isGameover();
     }
 
     private void executeTurn() {
@@ -96,12 +101,16 @@ public abstract class AbstractGame<BOARD, TURN> implements Game {
     }
     private void printGameOverMessageIfGameIsOver() {
         if(isGameover()){
-            write(String.format("%s hat verloren\n", getCurrentPlayer().getName()));
+            write(String.format("%s hat verloren%n", getCurrentPlayer().getName()));
         }
     }
 
     protected void write(String message) {
         writer.write(message);
+    }
+
+    protected void prepare() {
+        // OK
     }
 
     //------------- implementierungssumpf -------------
