@@ -15,7 +15,7 @@ public class ClientImpl implements Client {
     @Override
     public void doSomethingWithLargeArray() {
 
-        int []data = factory.createAndFillArray(1000);
+        int []data = factory.createAndFillArray(Integer.MAX_VALUE / 2);
         for (int i = 0; i < 3; i++) {
             System.out.println(data[i]);
         }
