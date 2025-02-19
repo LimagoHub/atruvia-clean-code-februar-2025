@@ -14,6 +14,13 @@ import time.inner.StopwatchImpl;
 public class Bootstrap {
 
     public void startApplication() {
+        for (int threadCount = 1; threadCount <= Runtime.getRuntime().availableProcessors() + 1; threadCount++) {
+            run(threadCount);
+        }
+
+    }
+
+    private static void run(final int threadCount) {
         Client client = createClient();
         client.doSomethingWithLargeArray();
     }
