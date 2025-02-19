@@ -12,7 +12,8 @@ public class IntArrayFactorySequentialImpl extends AbstractIntArrayFactory {
     }
 
     @Override
-    protected void fill(final int[] data) {
+    protected void fill() {
+        int [] data = getData();
         for (int i = 0; i < data.length; i++) {
             data[i] = generator.next();
         }

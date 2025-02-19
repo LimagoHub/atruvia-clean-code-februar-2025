@@ -3,41 +3,39 @@ package bootstrap;
 import client.Client;
 import client.inner.ClientImpl;
 import container.IntArrayFactory;
-import container.inner.decorator.IntArrayFactoryBenchmarkDecorator;
-import container.inner.sequential.IntArrayFactorySequentialImpl;
-import generator.IntGenerator;
+import container.inner.builder.IntArrayFactoryBuilder;
 
-import generator.inner.generic.GenericIntGenerator;
-import generator.inner.random.RandomNumberGenerator;
-import time.inner.StopwatchImpl;
+import generator.IntGeneratorFactory;
+import generator.inner.random.RandomNumberGeneratorFactory;
 
 public class Bootstrap {
 
     public void startApplication() {
-        for (int threadCount = 1; threadCount <= Runtime.getRuntime().availableProcessors() + 1; threadCount++) {
+        for (int threadCount = 0; threadCount <= Runtime.getRuntime().availableProcessors() + 1; threadCount++) {
             run(threadCount);
         }
 
     }
 
     private static void run(final int threadCount) {
-        Client client = createClient();
+        System.out.println("Starting with " + threadCount + " threads...");
+        Client client = createClient(threadCount);
         client.doSomethingWithLargeArray();
     }
 
-    private static IntGenerator createIntGenerator() {
-        return new RandomNumberGenerator();
-        //return new GenericIntGenerator(x->x+2, 0);
+    private static IntGeneratorFactory createIntGeneratorFactory() {
+        return new RandomNumberGeneratorFactory();
+
     }
 
-    private static IntArrayFactory createIntArrayFactory() {
-        IntArrayFactory result = new IntArrayFactorySequentialImpl(createIntGenerator());
-        result = new IntArrayFactoryBenchmarkDecorator(result, new StopwatchImpl());
-        return result;
+    private static IntArrayFactory createIntArrayFactory(final int threadCount) {
+        IntArrayFactoryBuilder.threadCount = threadCount;
+        IntArrayFactoryBuilder.benchmark = true;
+        return IntArrayFactoryBuilder.createIntArrayFactory(createIntGeneratorFactory());
     }
 
-    private static Client createClient() {
+    private static Client createClient(final int threadCount) {
 
-        return new ClientImpl(createIntArrayFactory());
+        return new ClientImpl(createIntArrayFactory(threadCount));
     }
 }
